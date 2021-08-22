@@ -1,5 +1,6 @@
 package com.archyle.fra.friendlyreminderbackend.input;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,33 +17,48 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 class UserControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
-    @Autowired
-    private ObjectMapper objectMapper;
+  @Autowired private MockMvc mockMvc;
+  @Autowired private ObjectMapper objectMapper;
 
-    @Test
-    public void registerUser_shouldBeAvailableForAllUsers() throws Exception {
-        RegisterUserRequest request = new RegisterUserRequest();
-        request.setUsername("bart");
-        request.setPassword("passwd");
-        mockMvc.perform(post("/user/register")
-                        .content(objectMapper.writeValueAsString(request)).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
-    }
+  @Test
+  public void registerUser_shouldBeAvailableForAllUsers() throws Exception {
+    UserRegistrationRequest request = new UserRegistrationRequest();
+    request.setUsername("bart");
+    request.setPassword("passwd");
+    mockMvc
+        .perform(
+            post("/user/register")
+                .content(objectMapper.writeValueAsString(request))
+                .contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isOk());
+  }
 
-    @Test
-    public void loginUser_shouldBeAvailableForAllUsers() throws Exception {
-        LoginRequest request = new LoginRequest("bart", "passwd");
-        mockMvc.perform(post("/user/login")
-                        .content(objectMapper.writeValueAsString(request)).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
-    }
+  @Test
+  public void loginUser_shouldBeAvailableForAllUsers() throws Exception {
+    LoginRequest request = new LoginRequest("bart", "passwd");
+    mockMvc
+        .perform(
+            post("/user/login")
+                .content(objectMapper.writeValueAsString(request))
+                .contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isOk());
+  }
 
-    @Test
-    public void getUser_shouldBeForbiddenForNotLoggedInUsers() throws Exception {
-        mockMvc.perform(get("/user")).andExpect(status().isForbidden());
-    }
+  @Test
+  public void shouldRegisterUser() throws Exception {
+    UserRegistrationRequest request = new UserRegistrationRequest();
+    request.setPassword("passwd");
+    request.setUsername("email");
+    mockMvc
+        .perform(
+            post("/user/register")
+                .content(objectMapper.writeValueAsString(request))
+                .contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isOk());
+  }
 
-
+  @Test
+  public void getUser_shouldBeForbiddenForNotLoggedInUsers() throws Exception {
+    mockMvc.perform(get("/user")).andExpect(status().isForbidden());
+  }
 }

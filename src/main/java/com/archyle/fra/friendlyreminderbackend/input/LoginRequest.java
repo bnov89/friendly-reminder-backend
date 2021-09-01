@@ -1,9 +1,11 @@
 package com.archyle.fra.friendlyreminderbackend.input;
 
-import lombok.Value;
+import lombok.Builder;
+import lombok.Data;
 
-@Value
+@Data
+@Builder
 public class LoginRequest {
-    String username;
-    String password;
+  String username;
+  String password;
 }

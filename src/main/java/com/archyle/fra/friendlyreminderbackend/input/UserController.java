@@ -2,18 +2,21 @@ package com.archyle.fra.friendlyreminderbackend.input;
 
 import com.archyle.fra.friendlyreminderbackend.output.repository.UserAccountEntity;
 import com.archyle.fra.friendlyreminderbackend.output.repository.UserAccountRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.EnumSet;
+
 @RestController
 @RequestMapping("/user")
+@RequiredArgsConstructor
 public class UserController {
 
+  private static final EnumSet<Authorities> REGULAR_USER_AUTHORITIES =
+      EnumSet.of(Authorities.REGULAR_USER);
   private final UserAccountRepository userAccountRepository;
-
-  public UserController(UserAccountRepository userAccountRepository) {
-    this.userAccountRepository = userAccountRepository;
-  }
+  private final TokenGenerator tokenGenerator;
 
   @PostMapping("/register")
   public ResponseEntity<UserRegistrationResponse> registerUser(
@@ -32,12 +35,13 @@ public class UserController {
         .findByUsernameAndPassword(request.getUsername(), request.getPassword())
         .map(
             userAccountEntity ->
-                ResponseEntity.ok(LoginResponse.builder().accessToken(generateToken()).build()))
+                ResponseEntity.ok(
+                    LoginResponse.builder()
+                        .accessToken(
+                            tokenGenerator.generate(
+                                request.getUsername(), REGULAR_USER_AUTHORITIES))
+                        .build()))
         .orElseThrow(() -> new WrongUsernameOrPasswordException("Wrong user name or password"));
-  }
-
-  private String generateToken() {
-    return "SOME_TOKEN";
   }
 
   @GetMapping

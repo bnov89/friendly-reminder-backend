@@ -2,16 +2,19 @@ package com.archyle.fra.friendlyreminderbackend.input;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import static org.hamcrest.Matchers.containsString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -31,6 +34,7 @@ class UserControllerTest extends AbstractIntegrationTest {
   @Autowired private MockMvc mockMvc;
   @Autowired private ObjectMapper objectMapper;
   @Autowired private TestSteps testSteps;
+  @MockBean private TokenGenerator tokenGenerator;
 
   @Test
   void loginUser_whenUserNotExists_shouldReturn401() throws Exception {
@@ -42,6 +46,7 @@ class UserControllerTest extends AbstractIntegrationTest {
 
   @Test
   void loginUser_whenUserExists_shouldReturnToken() throws Exception {
+    Mockito.when(tokenGenerator.generate(eq(USERNAME), Mockito.any())).thenReturn("SOME_TOKEN");
     testSteps.createUser(new UserRegistrationRequest(USERNAME, PASSWORD));
     testSteps
         .login(createLoginRequest(USERNAME, PASSWORD))

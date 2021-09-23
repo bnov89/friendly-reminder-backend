@@ -44,7 +44,7 @@ class TokenGeneratorImplTest {
             .parseClaimsJws(generatedToken);
     assertThat(claimsJws.getBody().getSubject()).isEqualTo(USERNAME);
     assertThat(claimsJws.getBody().get(Claims.AUTHORITIES.name(), String.class))
-        .isEqualTo("ADMINISTRATOR;REGULAR_USER");
+        .isEqualTo("ROLE_ADMINISTRATOR;ROLE_REGULAR_USER");
   }
 
   @Test
@@ -59,7 +59,7 @@ class TokenGeneratorImplTest {
             .parseClaimsJws(generatedToken);
     assertThat(claimsJws.getBody().getSubject()).isEqualTo(USERNAME);
     assertThat(claimsJws.getBody().get(Claims.AUTHORITIES.name(), String.class))
-        .isEqualTo("REGULAR_USER");
+        .isEqualTo("ROLE_REGULAR_USER");
   }
 
   @Test

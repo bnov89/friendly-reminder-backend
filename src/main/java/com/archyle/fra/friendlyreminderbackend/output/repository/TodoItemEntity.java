@@ -5,20 +5,16 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "users")
-public class UserAccountEntity {
+@Table(name = "todo_items")
+public class TodoItemEntity {
   @Id @GeneratedValue private Long id;
-  private String username;
-  private String password;
-  private String userAccountNumber;
+  private String description;
+  @ManyToOne private UserAccountEntity userAccount;
 }

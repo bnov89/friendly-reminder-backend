@@ -26,7 +26,7 @@ public class AbstractIntegrationTest {
     postgreDBContainer.start();
   }
 
-  protected static class DockerPostgreDataSourceInitializer
+  public static class DockerPostgreDataSourceInitializer
       implements ApplicationContextInitializer<ConfigurableApplicationContext> {
 
     @Override

@@ -1,5 +1,6 @@
 package com.archyle.fra.friendlyreminderbackend.input;
 
+import com.archyle.fra.friendlyreminderbackend.input.todo.CreateTodoItemRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -25,6 +26,15 @@ public class TestSteps {
   public ResultActions login(LoginRequest request) throws Exception {
     return mockMvc.perform(
         post("/user/login")
+            .content(objectMapper.writeValueAsString(request))
+            .contentType(MediaType.APPLICATION_JSON));
+  }
+
+  public ResultActions createTodoItem(CreateTodoItemRequest request, String accessToken)
+      throws Exception {
+    return mockMvc.perform(
+        post("/todo")
+            .header("Authorization", "Bearer " + accessToken)
             .content(objectMapper.writeValueAsString(request))
             .contentType(MediaType.APPLICATION_JSON));
   }

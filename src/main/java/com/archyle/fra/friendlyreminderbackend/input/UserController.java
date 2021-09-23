@@ -17,6 +17,7 @@ public class UserController {
       EnumSet.of(Authorities.REGULAR_USER);
   private final UserAccountRepository userAccountRepository;
   private final TokenGenerator tokenGenerator;
+  private final UserAccountNumberGenerator userAccountNumberGenerator;
 
   @PostMapping("/register")
   public ResponseEntity<UserRegistrationResponse> registerUser(
@@ -25,6 +26,7 @@ public class UserController {
         UserAccountEntity.builder()
             .username(request.getUsername())
             .password(request.getPassword())
+            .userAccountNumber(userAccountNumberGenerator.generate())
             .build());
     return ResponseEntity.ok().build();
   }
@@ -40,6 +42,7 @@ public class UserController {
                         .accessToken(
                             tokenGenerator.generate(
                                 request.getUsername(), REGULAR_USER_AUTHORITIES))
+                        .userAccountNumber(userAccountEntity.getUserAccountNumber())
                         .build()))
         .orElseThrow(() -> new WrongUsernameOrPasswordException("Wrong user name or password"));
   }

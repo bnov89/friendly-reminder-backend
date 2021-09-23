@@ -45,13 +45,14 @@ class UserControllerTest extends AbstractIntegrationTest {
   }
 
   @Test
-  void loginUser_whenUserExists_shouldReturnToken() throws Exception {
+  void loginUser_whenUserExists_shouldLogin() throws Exception {
     Mockito.when(tokenGenerator.generate(eq(USERNAME), Mockito.any())).thenReturn("SOME_TOKEN");
     testSteps.createUser(new UserRegistrationRequest(USERNAME, PASSWORD));
     testSteps
         .login(createLoginRequest(USERNAME, PASSWORD))
         .andExpect(status().isOk())
-        .andExpect(content().string(containsString("accessToken\":\"SOME_TOKEN")));
+        .andExpect(content().string(containsString("accessToken\":\"SOME_TOKEN")))
+            .andExpect(content().string(containsString("userAccountNumber\":\"FRA")));
   }
 
   @Test

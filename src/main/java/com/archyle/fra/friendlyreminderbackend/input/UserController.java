@@ -47,8 +47,21 @@ public class UserController {
         .orElseThrow(() -> new WrongUsernameOrPasswordException("Wrong user name or password"));
   }
 
-  @GetMapping
-  public String getUser() {
-    return "User returned";
+  @GetMapping("/{userAccountNumber}")
+  public ResponseEntity<GetUserResponse> getUser(@PathVariable String userAccountNumber) {
+    return userAccountRepository
+        .findByUserAccountNumber(userAccountNumber)
+        .map(
+            uae ->
+                ResponseEntity.ok(
+                    GetUserResponse.builder()
+                        .userAccountNumber(uae.getUserAccountNumber())
+                        .username(uae.getUsername())
+                        .build()))
+        .orElseThrow(
+            () ->
+                new UserNotFoundException(
+                    String.format(
+                        "User not found for given account number: %s", userAccountNumber)));
   }
 }

@@ -1,13 +1,12 @@
 package com.archyle.fra.friendlyreminderbackend.input.todo;
 
+import com.archyle.fra.friendlyreminderbackend.input.UserNotFoundException;
 import com.archyle.fra.friendlyreminderbackend.output.repository.TodoItemEntity;
 import com.archyle.fra.friendlyreminderbackend.output.repository.TodoRepository;
 import com.archyle.fra.friendlyreminderbackend.output.repository.UserAccountRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController()
 @RequestMapping("/todo")
@@ -19,9 +18,14 @@ public class TodoController {
 
   @GetMapping("/user/{userAccountNumber}")
   public ResponseEntity<TodoListResponse> getTodos(@PathVariable String userAccountNumber) {
-    List<TodoItemEntity> queryResult =
-        todoRepository.findTodoItemEntitiesByUserAccountNumber(userAccountNumber);
-    return ResponseEntity.ok(TodoListResponse.builder().todoItemList(queryResult).build());
+    return userAccountRepository
+        .findByUserAccountNumber(userAccountNumber)
+        .map(todoRepository::findTodoItemEntitiesByUserAccount)
+        .map(
+            queryResult ->
+                ResponseEntity.ok(TodoListResponse.builder().todoItemList(queryResult).build()))
+        .orElseThrow(
+            () -> new UserNotFoundException(String.format("User with given number %s not found", userAccountNumber)));
   }
 
   @PostMapping

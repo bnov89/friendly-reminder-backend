@@ -16,5 +16,7 @@ import javax.persistence.*;
 public class TodoItemEntity {
   @Id @GeneratedValue private Long id;
   private String description;
-  @ManyToOne private UserAccountEntity userAccount;
+
+  @ManyToOne
+  private UserAccountEntity userAccount;
 }

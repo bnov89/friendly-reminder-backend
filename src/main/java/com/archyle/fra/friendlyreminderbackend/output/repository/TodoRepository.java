@@ -7,5 +7,5 @@ import java.util.List;
 
 @Repository
 public interface TodoRepository extends CrudRepository<TodoItemEntity, Long> {
-    List<TodoItemEntity> findTodoItemEntitiesByUserAccountNumber(String userAccountNumber);
+    List<TodoItemEntity> findTodoItemEntitiesByUserAccount(UserAccountEntity userAccount);
 }

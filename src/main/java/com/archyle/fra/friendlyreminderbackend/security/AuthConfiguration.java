@@ -12,22 +12,25 @@ import org.springframework.security.web.authentication.AnonymousAuthenticationFi
 @RequiredArgsConstructor
 public class AuthConfiguration extends WebSecurityConfigurerAdapter {
 
-    private final SigningKeyProvider signingKeyProvider;
+  private final SigningKeyProvider signingKeyProvider;
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http.cors().disable().csrf().disable().sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .authorizeRequests()
-                .antMatchers("/user/login", "/user/register")
-                .anonymous()
-                .and()
-                .addFilterBefore(new JwtTokenValidatorFilter(signingKeyProvider), AnonymousAuthenticationFilter.class)
-                .authorizeRequests()
-                .antMatchers("/**")
-                .hasRole("REGULAR_USER")
-                .and();
-
-    }
+  @Override
+  protected void configure(HttpSecurity http) throws Exception {
+    http.cors()
+        .disable()
+        .csrf()
+        .disable()
+        .sessionManagement()
+        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        .and()
+        .authorizeRequests()
+        .antMatchers("/user/login", "/user/register")
+        .anonymous()
+        .and()
+        .addFilterBefore(
+            new JwtTokenValidatorFilter(signingKeyProvider), AnonymousAuthenticationFilter.class)
+        .authorizeRequests()
+        .antMatchers("/**")
+        .hasRole("REGULAR_USER");
+  }
 }

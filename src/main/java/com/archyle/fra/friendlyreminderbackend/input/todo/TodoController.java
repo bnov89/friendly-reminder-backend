@@ -1,58 +1,53 @@
 package com.archyle.fra.friendlyreminderbackend.input.todo;
 
-import com.archyle.fra.friendlyreminderbackend.input.UserNotFoundException;
-import com.archyle.fra.friendlyreminderbackend.output.repository.TodoItemEntity;
-import com.archyle.fra.friendlyreminderbackend.output.repository.TodoRepository;
-import com.archyle.fra.friendlyreminderbackend.output.repository.UserAccountRepository;
+import com.archyle.fra.friendlyreminderbackend.output.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @RestController()
-@RequestMapping("/todo")
+@RequestMapping("/todos")
 @RequiredArgsConstructor
 public class TodoController {
 
-  private final TodoRepository todoRepository;
+//  private final TodoRepository todoRepository;
+  private final TodoListRepository todosRepository;
   private final UserAccountRepository userAccountRepository;
 
   @GetMapping("/user/{userAccountNumber}")
   public ResponseEntity<TodoListResponse> getTodos(@PathVariable String userAccountNumber) {
-    return userAccountRepository
-        .findByUserAccountNumber(userAccountNumber)
-        .map(todoRepository::findTodoItemEntitiesByUserAccount)
-        .map(
-            queryResult ->
-                ResponseEntity.ok(TodoListResponse.builder().todoItemList(queryResult).build()))
-        .orElseThrow(
-            () -> new UserNotFoundException(String.format("User with given number %s not found", userAccountNumber)));
+    TodoListResponse todoListResponse =
+        todosRepository
+            .findTodoListEntityByUserAccountUserAccountNumber(userAccountNumber)
+            .map(TodoListEntity::getTodoItemList)
+            .map(todoItemList -> TodoListResponse.builder().todoItemList(todoItemList).build())
+            .orElse(TodoListResponse.builder().todoItemList(new TodoItemList()).build());
+    return ResponseEntity.ok(todoListResponse);
   }
 
-  @PostMapping
-  public ResponseEntity<CreateTodoItemResponse> createTodoItem(
-      @RequestBody CreateTodoItemRequest request) {
-    TodoItemEntity todoItemEntity =
-        userAccountRepository
-            .findByUserAccountNumber(request.getUserNumber())
+  @PutMapping("/user/{userAccountNumber}")
+  public ResponseEntity<PutTodosResponse> putTodos(
+      @RequestBody PutTodosRequest request, @PathVariable String userAccountNumber) {
+    TodoListEntity savedEntity =
+        todosRepository
+            .findTodoListEntityByUserAccountUserAccountNumber(userAccountNumber)
             .map(
-                uae ->
-                    todoRepository.save(
-                        TodoItemEntity.builder()
-                            .description(request.getDescription())
-                            .userAccount(uae)
-                            .build()))
-            .orElseThrow(
-                () ->
-                    new AccountNumberNotExistsException(
-                        String.format(
-                            "User account with given number %s doesn't exist!",
-                            request.getUserNumber())));
+                todoListEntity -> {
+                  todoListEntity.setTodoItemList(request.getTodoItemList());
+                  return todoListEntity;
+                })
+            .map(todosRepository::save)
+            .orElseGet(() -> saveNewTodoLIst(userAccountNumber, request.getTodoItemList()));
+    return ResponseEntity.ok(
+        PutTodosResponse.builder().todoItemList(savedEntity.getTodoItemList()).build());
+  }
 
-    return ResponseEntity.ok()
-        .body(
-            CreateTodoItemResponse.builder()
-                .id(todoItemEntity.getId())
-                .description(todoItemEntity.getDescription())
-                .build());
+  private TodoListEntity saveNewTodoLIst(String userAccountNumber, TodoItemList todoItemList) {
+    Optional<UserAccountEntity> userAccount =
+        userAccountRepository.findByUserAccountNumber(userAccountNumber);
+    return todosRepository.save(
+        TodoListEntity.builder().userAccount(userAccount.get()).todoItemList(todoItemList).build());
   }
 }

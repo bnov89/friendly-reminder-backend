@@ -5,18 +5,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
+import java.util.List;
 
-@Entity
-@Data
 @Builder
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "todo_items")
-public class TodoItemEntity {
-  @Id @GeneratedValue private Long id;
-  private String description;
+public class TodoItemList {
 
-  @ManyToOne
-  private UserAccountEntity userAccount;
+  private List<TodoItem> todoItems;
 }

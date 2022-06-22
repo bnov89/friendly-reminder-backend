@@ -5,7 +5,7 @@ import lombok.experimental.UtilityClass;
 import java.util.Set;
 
 @UtilityClass
-public class TableNames {
+public class  TableNames {
 
   public static final String USER_TABLE_NAME = "users";
 

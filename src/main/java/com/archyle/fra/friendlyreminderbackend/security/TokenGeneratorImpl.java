@@ -1,9 +1,5 @@
-package com.archyle.fra.friendlyreminderbackend.input.user;
+package com.archyle.fra.friendlyreminderbackend.security;
 
-import com.archyle.fra.friendlyreminderbackend.input.Authorities;
-import com.archyle.fra.friendlyreminderbackend.input.Claims;
-import com.archyle.fra.friendlyreminderbackend.input.Products;
-import com.archyle.fra.friendlyreminderbackend.input.SigningKeyProvider;
 import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

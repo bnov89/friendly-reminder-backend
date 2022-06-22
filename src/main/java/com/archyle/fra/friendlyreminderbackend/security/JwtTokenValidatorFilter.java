@@ -1,6 +1,5 @@
 package com.archyle.fra.friendlyreminderbackend.security;
 
-import com.archyle.fra.friendlyreminderbackend.input.SigningKeyProvider;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
@@ -45,7 +44,7 @@ public class JwtTokenValidatorFilter extends OncePerRequestFilter {
           claims
               .getBody()
               .get(
-                  com.archyle.fra.friendlyreminderbackend.input.Claims.AUTHORITIES.name(),
+                  com.archyle.fra.friendlyreminderbackend.security.Claims.AUTHORITIES.name(),
                   String.class);
       Authentication authentication =
           new UsernamePasswordAuthenticationToken(

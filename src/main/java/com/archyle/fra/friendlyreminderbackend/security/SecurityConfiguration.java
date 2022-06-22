@@ -1,7 +1,5 @@
 package com.archyle.fra.friendlyreminderbackend.security;
 
-import com.archyle.fra.friendlyreminderbackend.input.SigningKeyProvider;
-import com.archyle.fra.friendlyreminderbackend.input.SigningKeyProviderImpl;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;

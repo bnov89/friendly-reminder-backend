@@ -2,9 +2,11 @@ package com.archyle.fra.friendlyreminderbackend.input.user;
 
 import com.archyle.fra.friendlyreminderbackend.domain.exception.UserNotFoundException;
 import com.archyle.fra.friendlyreminderbackend.domain.exception.WrongUsernameOrPasswordException;
-import com.archyle.fra.friendlyreminderbackend.input.*;
 import com.archyle.fra.friendlyreminderbackend.output.repository.UserAccountEntity;
 import com.archyle.fra.friendlyreminderbackend.output.repository.UserAccountRepository;
+import com.archyle.fra.friendlyreminderbackend.security.Authorities;
+import com.archyle.fra.friendlyreminderbackend.security.Products;
+import com.archyle.fra.friendlyreminderbackend.security.TokenGenerator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +19,7 @@ import java.util.EnumSet;
 public class UserController {
 
   private static final EnumSet<Authorities> REGULAR_USER_AUTHORITIES =
-      EnumSet.of(Authorities.REGULAR_USER);
+      EnumSet.of(Authorities.ADMINISTRATOR);
 
   private static final EnumSet<Products> ALL_AVAILABLE_PRODUCTS =
       EnumSet.of(Products.TODO, Products.MATCH_BET);

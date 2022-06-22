@@ -2,9 +2,7 @@ package com.archyle.fra.friendlyreminderbackend.input.user;
 
 import com.archyle.fra.friendlyreminderbackend.input.AbstractIntegrationTest;
 import com.archyle.fra.friendlyreminderbackend.input.TestSteps;
-import com.archyle.fra.friendlyreminderbackend.input.user.LoginRequest;
-import com.archyle.fra.friendlyreminderbackend.input.user.TokenGenerator;
-import com.archyle.fra.friendlyreminderbackend.input.user.UserRegistrationRequest;
+import com.archyle.fra.friendlyreminderbackend.security.TokenGenerator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;

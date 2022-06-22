@@ -1,6 +1,5 @@
 package com.archyle.fra.friendlyreminderbackend.security;
 
-import com.archyle.fra.friendlyreminderbackend.input.SigningKeyProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;

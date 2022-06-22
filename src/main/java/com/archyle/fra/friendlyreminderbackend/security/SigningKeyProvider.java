@@ -1,4 +1,4 @@
-package com.archyle.fra.friendlyreminderbackend.input;
+package com.archyle.fra.friendlyreminderbackend.security;
 
 import java.security.Key;
 

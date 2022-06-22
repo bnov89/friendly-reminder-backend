@@ -1,6 +1,5 @@
 package com.archyle.fra.friendlyreminderbackend.input;
 
-import com.archyle.fra.friendlyreminderbackend.input.todo.CreateTodoItemRequest;
 import com.archyle.fra.friendlyreminderbackend.input.user.LoginRequest;
 import com.archyle.fra.friendlyreminderbackend.input.user.UserRegistrationRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -32,12 +31,12 @@ public class TestSteps {
             .contentType(MediaType.APPLICATION_JSON));
   }
 
-  public ResultActions createTodoItem(CreateTodoItemRequest request, String accessToken)
-      throws Exception {
-    return mockMvc.perform(
-        post("/todo")
-            .header("Authorization", "Bearer " + accessToken)
-            .content(objectMapper.writeValueAsString(request))
-            .contentType(MediaType.APPLICATION_JSON));
-  }
+//  public ResultActions createTodoItem(CreateTodoItemRequest request, String accessToken)
+//      throws Exception {
+//    return mockMvc.perform(
+//        post("/todo")
+//            .header("Authorization", "Bearer " + accessToken)
+//            .content(objectMapper.writeValueAsString(request))
+//            .contentType(MediaType.APPLICATION_JSON));
+//  }
 }

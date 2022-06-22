@@ -1,9 +1,9 @@
-package com.archyle.fra.friendlyreminderbackend.input;
+package com.archyle.fra.friendlyreminderbackend.input.user;
 
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserAccountNumberGeneratorImpl implements UserAccountNumberGenerator {
+class UserAccountNumberGeneratorImpl implements UserAccountNumberGenerator {
     @Override
     public String generate() {
         long leftLimit = 1000000L;

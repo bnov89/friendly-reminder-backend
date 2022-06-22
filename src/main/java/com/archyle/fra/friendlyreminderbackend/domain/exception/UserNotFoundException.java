@@ -1,4 +1,4 @@
-package com.archyle.fra.friendlyreminderbackend.input;
+package com.archyle.fra.friendlyreminderbackend.domain.exception;
 
 public class UserNotFoundException extends RuntimeException {
   public UserNotFoundException(String message) {

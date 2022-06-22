@@ -28,6 +28,8 @@ public class SecurityConfiguration {
       @Override
       public void addCorsMappings(@NonNull CorsRegistry registry) {
         registry.addMapping("/**").allowedOrigins("http://localhost:3000");
+//                .allowedHeaders("Authorization")
+//                .allowCredentials(true);
       }
     };
   }

@@ -1,4 +1,6 @@
 package com.archyle.fra.friendlyreminderbackend.input;
 
-public class UserRegistrationResponse {
+public enum Products {
+    TODO,
+    MATCH_BET
 }

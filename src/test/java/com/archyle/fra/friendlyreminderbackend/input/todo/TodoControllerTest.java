@@ -1,8 +1,12 @@
 package com.archyle.fra.friendlyreminderbackend.input.todo;
 
 import com.archyle.fra.friendlyreminderbackend.input.*;
+import com.archyle.fra.friendlyreminderbackend.input.user.LoginRequest;
+import com.archyle.fra.friendlyreminderbackend.input.user.LoginResponse;
+import com.archyle.fra.friendlyreminderbackend.input.user.UserRegistrationRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -30,6 +34,7 @@ class TodoControllerTest extends AbstractIntegrationTest {
   @Autowired private ObjectMapper objectMapper;
 
   @Test
+  @Disabled
   void shouldCreateTodoItem() throws Exception {
     testSteps.createUser(
         UserRegistrationRequest.builder().username(USERNAME).password(PASSWORD).build());

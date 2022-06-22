@@ -1,5 +1,7 @@
 package com.archyle.fra.friendlyreminderbackend.input;
 
+import com.archyle.fra.friendlyreminderbackend.input.user.TokenGenerator;
+import com.archyle.fra.friendlyreminderbackend.input.user.TokenGeneratorImpl;
 import io.jsonwebtoken.Jwts;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,6 +24,8 @@ import static org.mockito.Mockito.when;
 class TokenGeneratorImplTest {
 
   public static final String USERNAME = "username@fakeemail.com";
+  public static final EnumSet<Authorities> AUTHORITIES = EnumSet.of(ADMINISTRATOR, REGULAR_USER);
+  public static final EnumSet<Products> PRODUCTS = EnumSet.of(Products.TODO, Products.MATCH_BET);
   @Mock private Key key;
   @Mock private SigningKeyProvider signingKeyProvider;
   private TokenGenerator ut;
@@ -36,7 +40,7 @@ class TokenGeneratorImplTest {
   void shouldGenerateTokenForGivenUserAndAuthoritiesList() {
     when(signingKeyProvider.get())
             .thenReturn(new SecretKeySpec(secretKey.getBytes(StandardCharsets.UTF_8), "HmacSHA256"));
-    String generatedToken = ut.generate(USERNAME, EnumSet.of(ADMINISTRATOR, REGULAR_USER));
+    String generatedToken = ut.generate(USERNAME, AUTHORITIES, PRODUCTS);
     var claimsJws =
         Jwts.parserBuilder()
             .setSigningKey(secretKey.getBytes(StandardCharsets.UTF_8))
@@ -51,7 +55,7 @@ class TokenGeneratorImplTest {
   void shouldGenerateTokenForGivenUserAndOneAuthority() {
     when(signingKeyProvider.get())
             .thenReturn(new SecretKeySpec(secretKey.getBytes(StandardCharsets.UTF_8), "HmacSHA256"));
-    String generatedToken = ut.generate(USERNAME, EnumSet.of(REGULAR_USER));
+    String generatedToken = ut.generate(USERNAME, EnumSet.of(REGULAR_USER), PRODUCTS);
     var claimsJws =
         Jwts.parserBuilder()
             .setSigningKey(secretKey.getBytes(StandardCharsets.UTF_8))
@@ -65,27 +69,25 @@ class TokenGeneratorImplTest {
   @Test
   void noAuthorities_shouldThrowException() {
     IllegalArgumentException exception =
-        Assertions.assertThrows(IllegalArgumentException.class, () -> ut.generate(USERNAME, null));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> ut.generate(USERNAME, null, PRODUCTS));
     assertThat(exception).hasMessage("Invalid authorities: null");
   }
 
   @Test
   void noUsername_shouldThrowException() {
-    EnumSet<Authorities> authorities = EnumSet.of(ADMINISTRATOR, REGULAR_USER);
     IllegalArgumentException exception =
         Assertions.assertThrows(
             IllegalArgumentException.class,
-            () -> ut.generate(null, authorities));
+            () -> ut.generate(null, AUTHORITIES, PRODUCTS));
     assertThat(exception).hasMessage("Invalid username: null");
   }
 
   @Test
   void emptyUsername_shouldThrowException() {
-    EnumSet<Authorities> authorities = EnumSet.of(ADMINISTRATOR, REGULAR_USER);
     IllegalArgumentException exception =
         Assertions.assertThrows(
             IllegalArgumentException.class,
-            () -> ut.generate("", authorities));
+            () -> ut.generate("", AUTHORITIES, PRODUCTS));
     assertThat(exception).hasMessage("Invalid username: ");
   }
 }

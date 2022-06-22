@@ -1,5 +1,8 @@
-package com.archyle.fra.friendlyreminderbackend.input;
+package com.archyle.fra.friendlyreminderbackend.input.user;
 
+import com.archyle.fra.friendlyreminderbackend.domain.exception.UserNotFoundException;
+import com.archyle.fra.friendlyreminderbackend.domain.exception.WrongUsernameOrPasswordException;
+import com.archyle.fra.friendlyreminderbackend.input.*;
 import com.archyle.fra.friendlyreminderbackend.output.repository.UserAccountEntity;
 import com.archyle.fra.friendlyreminderbackend.output.repository.UserAccountRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +18,11 @@ public class UserController {
 
   private static final EnumSet<Authorities> REGULAR_USER_AUTHORITIES =
       EnumSet.of(Authorities.REGULAR_USER);
+
+  private static final EnumSet<Products> ALL_AVAILABLE_PRODUCTS =
+      EnumSet.of(Products.TODO, Products.MATCH_BET);
+
+
   private final UserAccountRepository userAccountRepository;
   private final TokenGenerator tokenGenerator;
   private final UserAccountNumberGenerator userAccountNumberGenerator;
@@ -41,7 +49,7 @@ public class UserController {
                     LoginResponse.builder()
                         .accessToken(
                             tokenGenerator.generate(
-                                request.getUsername(), REGULAR_USER_AUTHORITIES))
+                                request.getUsername(), REGULAR_USER_AUTHORITIES, ALL_AVAILABLE_PRODUCTS))
                         .userAccountNumber(userAccountEntity.getUserAccountNumber())
                         .build()))
         .orElseThrow(() -> new WrongUsernameOrPasswordException("Wrong user name or password"));

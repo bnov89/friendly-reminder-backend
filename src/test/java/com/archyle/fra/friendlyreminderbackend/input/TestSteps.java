@@ -1,6 +1,8 @@
 package com.archyle.fra.friendlyreminderbackend.input;
 
 import com.archyle.fra.friendlyreminderbackend.input.todo.CreateTodoItemRequest;
+import com.archyle.fra.friendlyreminderbackend.input.user.LoginRequest;
+import com.archyle.fra.friendlyreminderbackend.input.user.UserRegistrationRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;

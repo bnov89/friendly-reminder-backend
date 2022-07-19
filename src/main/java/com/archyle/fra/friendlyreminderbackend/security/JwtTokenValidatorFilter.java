@@ -20,6 +20,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 
+import static com.archyle.fra.friendlyreminderbackend.security.Claims.ACCOUNT_NUMBER;
+import static com.archyle.fra.friendlyreminderbackend.security.Claims.AUTHORITIES;
+
 @RequiredArgsConstructor
 public class JwtTokenValidatorFilter extends OncePerRequestFilter {
 
@@ -40,15 +43,11 @@ public class JwtTokenValidatorFilter extends OncePerRequestFilter {
               .setSigningKey(signingKeyProvider.get())
               .build()
               .parseClaimsJws(authHeader);
-      String authorities =
-          claims
-              .getBody()
-              .get(
-                  com.archyle.fra.friendlyreminderbackend.security.Claims.AUTHORITIES.name(),
-                  String.class);
+      String authorities = claims.getBody().get(AUTHORITIES.name(), String.class);
+      String userAccountNumber = claims.getBody().get(ACCOUNT_NUMBER.name(), String.class);
       Authentication authentication =
           new UsernamePasswordAuthenticationToken(
-              claims.getBody().getSubject(),
+              new Principal(claims.getBody().getSubject(), userAccountNumber),
               null,
               AuthorityUtils.commaSeparatedStringToAuthorityList(authorities));
       LOGGER.info("User: {} Authorities: {}", claims.getBody().getSubject(), authorities);

@@ -2,5 +2,6 @@ package com.archyle.fra.friendlyreminderbackend.security;
 
 public enum Claims {
     AUTHORITIES,
-    ASSIGNED_PRODUCTS;
+    ASSIGNED_PRODUCTS,
+    ACCOUNT_NUMBER;
 }

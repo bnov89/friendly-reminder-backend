@@ -30,6 +30,6 @@ public class AuthConfiguration extends WebSecurityConfigurerAdapter {
             new JwtTokenValidatorFilter(signingKeyProvider), AnonymousAuthenticationFilter.class)
         .authorizeRequests()
         .antMatchers("/**")
-        .hasRole("REGULAR_USER");
+        .hasRole("ADMINISTRATOR");
   }
 }

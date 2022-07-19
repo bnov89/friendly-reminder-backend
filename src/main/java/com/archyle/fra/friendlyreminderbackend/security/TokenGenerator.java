@@ -4,5 +4,5 @@ import java.util.EnumSet;
 
 public interface TokenGenerator {
 
-  String generate(String username, EnumSet<Authorities> authorities, EnumSet<Products> products);
+  String generate(Principal principal, EnumSet<Authorities> authorities, EnumSet<Products> products);
 }

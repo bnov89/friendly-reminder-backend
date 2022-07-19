@@ -2,9 +2,11 @@ package com.archyle.fra.friendlyreminderbackend.security;
 
 import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.EnumSet;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -14,12 +16,12 @@ public class TokenGeneratorImpl implements TokenGenerator {
 
   @Override
   public String generate(
-      final String username,
+      final Principal principal,
       final EnumSet<Authorities> authorities,
       final EnumSet<Products> products) {
-    validate(username, authorities);
+    validate(principal, authorities);
     return Jwts.builder()
-        .setSubject(username)
+        .setSubject(principal.getUsername())
         .claim(
             Claims.AUTHORITIES.name(),
             authorities.stream()
@@ -30,15 +32,23 @@ public class TokenGeneratorImpl implements TokenGenerator {
             Claims.ASSIGNED_PRODUCTS.name(),
             products.stream()
                 .map(Products::name)
-                .reduce("", (s, s2) -> s + ";" + s2)
+                .reduce("", (s, s2) -> s + s2 + ";")
                 .replaceAll(";$", ""))
+        .claim(Claims.ACCOUNT_NUMBER.name(), principal.getUserAccountNumber())
         .signWith(signingKeyProvider.get())
         .compact();
   }
 
-  private void validate(String username, EnumSet<Authorities> authorities) {
-    if (username == null || username.isEmpty()) {
-      throw new IllegalArgumentException("Invalid username: " + username);
+  private void validate(Principal principal, EnumSet<Authorities> authorities) {
+    if (Objects.isNull(principal)) {
+      throw new IllegalArgumentException("Principal is null");
+    }
+    if (StringUtils.isBlank(principal.getUsername())) {
+      throw new IllegalArgumentException("Invalid username: " + principal.getUsername());
+    }
+    if (StringUtils.isBlank(principal.getUserAccountNumber())) {
+      throw new IllegalArgumentException(
+          "Invalid user account number: " + principal.getUserAccountNumber());
     }
     if (authorities == null || authorities.isEmpty()) {
       throw new IllegalArgumentException("Invalid authorities: " + authorities);
